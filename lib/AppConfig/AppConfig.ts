@@ -4,10 +4,12 @@ class AppConfig {
     {
         this.Express = { Port: env.Express.Port}
         this.Azure =  {AccessKey: env.Azure.AccessKey, TableName: env.Azure.TableName, AccountName: env.Azure.AccountName};
+        this.LocalDisk = {BaseDir: env.LocalDisk.BaseDir}
     }
 
     Express: ExpressConfig;
     Azure: AzureConfig;
+    LocalDisk : LocalDiskConfig;
 }
 
 interface ExpressConfig {
@@ -20,4 +22,12 @@ interface AzureConfig {
     AccountName: string
 }
 
-export {AppConfig, ExpressConfig, AzureConfig};
+interface LocalDiskConfig {
+    BaseDir: string
+}
+
+interface RequestBinConfig {
+    StorageMechanism: string
+}
+
+export {AppConfig, ExpressConfig, AzureConfig, LocalDiskConfig, RequestBinConfig};

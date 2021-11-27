@@ -5,6 +5,7 @@ import config from './config';
 import express from 'express';
 import { IAPIRequestLogger } from "./lib/APIRequestLogger/IAPIRequestLogger";
 import { AzureTableAPIRequestLogger } from "./lib/APIRequestLogger/AzureTableApiRequestLogger";
+import { LocalDiskApiRequestLogger } from "./lib/APIRequestLogger/LocalDiskApiRequestLogger";
 
 const OnRequestReceived = async (request: any, result: any, next: any) => {
 
@@ -17,7 +18,14 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
       Body: request.body
     }
 
-    const apiLogger: IAPIRequestLogger = new AzureTableAPIRequestLogger(config.Azure);
+    //TODO: Move out to factory
+    let apiLogger : IAPIRequestLogger;
+    if(config.RequestBinConfig.StorageMechanism === 'AzureTable') {
+      apiLogger = new AzureTableAPIRequestLogger(config.Azure);
+    } else {
+      apiLogger = new LocalDiskApiRequestLogger(config.LocalDisk);
+    }
+
     await apiLogger.LogRequestAsync(requestLog, partition);
 
     console.log(requestLog);
