@@ -12,6 +12,7 @@ Create a file called .env with the following content
 
 ```
 PORT=6111
+STORAGE_MECHANISM=AzureTable
 AZURE_STORAGE_ACCESS_KEY=
 AZURE_STORAGE_ACCOUNT_NAME=
 AZURE_STORAGE_TABLE_NAME=
@@ -19,6 +20,12 @@ LOCAL_DISK_BASE_DIR=
 ```
 
 Populate the value for each property. 
+
+Supported Storage Mechanism values:
+ - AzureTable
+   - requires  azure_storage_* variables to be populated
+ - LocalDisk
+   - requires LOCAL_DISK_* variables to be populated
 
 run 
 
