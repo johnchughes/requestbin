@@ -51,6 +51,7 @@ app.get('/app', (req, res) => res.sendFile(__dirname + '/index.html'));
 
 
 app.listen(config.Express.Port, () => {
+  console.log(`Storage Mechanism => ${config.RequestBinConfig.StorageMechanism}`)
   console.log(`[server]: Request bin is running at https://localhost:${config.Express.Port}`);
 });
 

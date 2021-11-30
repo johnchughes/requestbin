@@ -23,8 +23,8 @@ yarn install
 Create a file called .env with the following content
 
 ```
-PORT=6111
-STORAGE_MECHANISM=AzureTable
+PORT=3000
+STORAGE_MECHANISM=
 AZURE_STORAGE_ACCESS_KEY=
 AZURE_STORAGE_ACCOUNT_NAME=
 AZURE_STORAGE_TABLE_NAME=

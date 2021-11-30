@@ -25,9 +25,12 @@ import { IAPIRequestLogger } from "./IAPIRequestLogger";
 
         const file_path : string = `${directory}/${RequestData.Method}_${date_string}.json`;
 
-        const file_content = JSON.stringify(RequestData);   
+        console.log(file_path);
+
+        const file_content = JSON.stringify(RequestData);
+
         var writer = fs.createWriteStream(file_path);
-        writer.write(JSON.stringify(file_content));
+        writer.write(file_content);
         writer.close();
      }
 
