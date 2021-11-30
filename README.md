@@ -8,6 +8,18 @@ Currently the project only supports sending data to an Azure Table Storage, but 
 
 ## How to run
 
+Install node js, once installed install yarn
+
+```
+npm install -g yarn
+```
+
+clone the repo and open a terminal in the requestbin repository and run
+
+```
+yarn install
+```
+
 Create a file called .env with the following content
 
 ```
