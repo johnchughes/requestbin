@@ -10,7 +10,8 @@ import { LocalDiskApiRequestLogger } from "./lib/APIRequestLogger/LocalDiskApiRe
 const OnRequestReceived = async (request: any, result: any, next: any) => {
 
   try {
-    const { partition } = request.query;
+
+    const partition = request.params.partition;
 
     const requestLog = {
       Method: request.method,
@@ -19,8 +20,8 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
     }
 
     //TODO: Move out to factory
-    let apiLogger : IAPIRequestLogger;
-    if(config.RequestBinConfig.StorageMechanism === 'AzureTable') {
+    let apiLogger: IAPIRequestLogger;
+    if (config.RequestBinConfig.StorageMechanism === 'AzureTable') {
       apiLogger = new AzureTableAPIRequestLogger(config.Azure);
     } else {
       apiLogger = new LocalDiskApiRequestLogger(config.LocalDisk);
@@ -35,19 +36,22 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
   catch (err) {
     next(err);
   }
-};
 
+};
 
 const app = express();
 
-app.get('/', OnRequestReceived);
-app.post('/', OnRequestReceived);
-app.put('/', OnRequestReceived);
-app.patch('/', OnRequestReceived);
-app.delete('/', OnRequestReceived);
-app.options('/', OnRequestReceived);
+const BIN_URL_FORMAT: string = "/:partition";
 
-app.get('/app', (req, res) => res.sendFile(__dirname + '/index.html'));
+app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
+
+
+app.get(BIN_URL_FORMAT, OnRequestReceived);
+app.post(BIN_URL_FORMAT, OnRequestReceived);
+app.put(BIN_URL_FORMAT, OnRequestReceived);
+app.patch(BIN_URL_FORMAT, OnRequestReceived);
+app.delete(BIN_URL_FORMAT, OnRequestReceived);
+app.options(BIN_URL_FORMAT, OnRequestReceived);
 
 
 app.listen(config.Express.Port, () => {

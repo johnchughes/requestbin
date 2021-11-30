@@ -1,12 +1,12 @@
 # requestbin
 
-This project is a dumb request bin, all it will do is take API requests log some information and return OK. Its purpose is for use in development systems allowing the system to send the API request and for the developer to view what was sent. While there are hosted services out there that will generate an API to send data to the point of this is that the developer can control where the data goes reducing sensitive information being sent to other services. 
+RequestBin is a dump API that will take any requests and log them to a configured storage mechanism, two mechanisms are currently supported Local Disk and Azure Table Storage. 
 
-Currently the project only supports sending data to an Azure Table Storage, but it would be fairly simple to extend to use the local storage instead. 
+The idea behind this project is to facilitate local development where you may be developing against an external API but for what ever reason you cant hit that API yet, so instead you can point your code at the requestbin endpoint and still send a request without hitting any actual endpoints. RequestBin allows you to view the headers and data sent, there are online tools available that do similar things but the point of this project is you get to choose where the data is stored.
 
 
 
-## How to run
+## Setup
 
 Install node js, once installed install yarn
 
@@ -39,10 +39,20 @@ Supported Storage Mechanism values:
  - LocalDisk
    - requires LOCAL_DISK_* variables to be populated
 
-run 
+
+# Running RequestBin
+
+in a termainl navigate to the requestbin directory and run
 
 ```
 yarn start
 ```
 
-send requests.
+A web server will be started running at ```http://localhost:<PORT>```
+
+If you open a browser and navigate to the above URL it will load the application for viewing recieved requests (TODO).
+
+To log requests then add a URL paramter to the requests in the format of ```http://localhost<PORT>/<BinName>```, requests will be logged and stored in a directory or partition by the name provided as the URL parameter. 
+
+ if you send used the BinName 'myAPI' and had the LocalDisk storage mechanism configured in your local disk base directory you will find a folder called 'myAPI'and a json file containing details of that request. 
+ If using azure table storage then the partition name will be the BinName. 
