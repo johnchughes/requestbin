@@ -1,8 +1,9 @@
 import * as dotenv from "dotenv";
 dotenv.config({ path: __dirname + '/.env' });
-import config from './config';
 
+import config from './config';
 import express from 'express';
+import bodyParser from "body-parser";
 import { IAPIRequestLogger } from "./lib/APIRequestLogger/IAPIRequestLogger";
 import { AzureTableAPIRequestLogger } from "./lib/APIRequestLogger/AzureTableApiRequestLogger";
 import { LocalDiskApiRequestLogger } from "./lib/APIRequestLogger/LocalDiskApiRequestLogger";
@@ -13,10 +14,12 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
 
     const partition = request.params.partition;
 
+    const base64Body = btoa(request.body);
+
     const requestLog = {
       Method: request.method,
       Headers: request.headers,
-      Body: request.body
+      Body: base64Body
     }
 
     //TODO: Move out to factory
@@ -29,8 +32,6 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
 
     await apiLogger.LogRequestAsync(requestLog, partition);
 
-    console.log(requestLog);
-
     result.sendStatus(200);
   }
   catch (err) {
@@ -40,6 +41,7 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
 };
 
 const app = express();
+app.use(bodyParser.text({type: "*/*"}));
 
 const BIN_URL_FORMAT: string = "/:partition";
 
