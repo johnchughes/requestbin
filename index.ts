@@ -43,7 +43,7 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
 const app = express();
 app.use(bodyParser.text({type: "*/*"}));
 
-const BIN_URL_FORMAT: string = "/:partition";
+const BIN_URL_FORMAT: string = "bin/:partition";
 
 app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
 
