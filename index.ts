@@ -1,6 +1,8 @@
 import * as dotenv from "dotenv";
 dotenv.config({ path: __dirname + '/.env' });
 
+import * as fs from 'fs';
+import * as path from 'path';
 import config from './config';
 import express from 'express';
 import bodyParser from "body-parser";
@@ -43,11 +45,28 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
 const app = express();
 app.use(bodyParser.text({type: "*/*"}));
 
-const BIN_URL_FORMAT: string = "bin/:partition";
+const BIN_URL_FORMAT: string = "/bin/:partition";
 
+//App/API routes
 app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
+app.get('/api/requests', (req, res) => {
+  const baseDir = path.resolve(config.LocalDisk.BaseDir);
+  fs.readdir(baseDir, (err, files) => {
+    files.forEach(dir => {
+      fs.readdir(baseDir + '/' + dir, (err, files) => {
+        console.log(files);
+      });
+    })
+  });
+  res.sendStatus(200);
+});
+
+app.get('api/requests/:itempath', (req, res) => {
+  res.sendStatus(200);
+});
 
 
+//Logging Routes
 app.get(BIN_URL_FORMAT, OnRequestReceived);
 app.post(BIN_URL_FORMAT, OnRequestReceived);
 app.put(BIN_URL_FORMAT, OnRequestReceived);
@@ -58,7 +77,7 @@ app.options(BIN_URL_FORMAT, OnRequestReceived);
 
 app.listen(config.Express.Port, () => {
   console.log(`Storage Mechanism => ${config.RequestBinConfig.StorageMechanism}`)
-  console.log(`[server]: Request bin is running at https://localhost:${config.Express.Port}`);
+  console.log(`[server]: Request bin is running at http://localhost:${config.Express.Port}`);
 });
 
 
