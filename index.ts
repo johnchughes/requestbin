@@ -15,9 +15,7 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
   try {
 
     const partition = request.params.partition;
-
-    const base64Body = btoa(request.body);
-
+    const base64Body = Buffer.from(request.body, 'base64');
     const requestLog = {
       Method: request.method,
       Headers: request.headers,
@@ -49,16 +47,30 @@ const BIN_URL_FORMAT: string = "/bin/:partition";
 
 //App/API routes
 app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
-app.get('/api/requests', (req, res) => {
+app.get('/api/requests', async (req, res) => {
+
+  let requestBins : any = [];
+
   const baseDir = path.resolve(config.LocalDisk.BaseDir);
-  fs.readdir(baseDir, (err, files) => {
-    files.forEach(dir => {
-      fs.readdir(baseDir + '/' + dir, (err, files) => {
-        console.log(files);
-      });
-    })
-  });
-  res.sendStatus(200);
+  var directrories = await fs.readdirSync(baseDir);
+  for(var dir of directrories){
+
+    let files = await fs.readdirSync(baseDir + '/' + dir);
+    let directoryEntry : any = {
+      "root": dir,
+      "files": files
+    };
+    requestBins.push(directoryEntry);
+
+  }
+
+  const requestBinResponse : any = {
+    Date: Date.now(),
+    Bins: requestBins
+  };
+
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(requestBinResponse));
 });
 
 app.get('api/requests/:itempath', (req, res) => {
