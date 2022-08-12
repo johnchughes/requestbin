@@ -1,6 +1,6 @@
 export default {
     Express: {
-        Port: process.env.PORT
+        Port: process.env.PORT ?? 6060
     },
     Azure: {
         AccessKey: process.env.AZURE_STORAGE_ACCESS_KEY ?? '',

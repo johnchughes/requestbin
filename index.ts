@@ -9,6 +9,7 @@ import bodyParser from "body-parser";
 import { IAPIRequestLogger } from "./lib/APIRequestLogger/IAPIRequestLogger";
 import { AzureTableAPIRequestLogger } from "./lib/APIRequestLogger/AzureTableApiRequestLogger";
 import { LocalDiskApiRequestLogger } from "./lib/APIRequestLogger/LocalDiskApiRequestLogger";
+import rateLimit from 'express-rate-limit';
 
 const OnRequestReceived = async (request: any, result: any, next: any) => {
 
@@ -41,6 +42,15 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
 };
 
 const app = express();
+
+//TODO: make this configurable. 
+const rateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true
+});
+
+app.use(rateLimiter);
 app.use(bodyParser.text({type: "*/*"}));
 
 const BIN_URL_FORMAT: string = "/bin/:partition";
