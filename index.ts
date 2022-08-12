@@ -16,7 +16,11 @@ const OnRequestReceived = async (request: any, result: any, next: any) => {
   try {
 
     const partition = request.params.partition;
-    const base64Body = Buffer.from(request.body, 'base64');
+
+
+    const bodyMissing = request.body.constructor === Object && Object.keys(request.body).length === 0;
+
+    const base64Body = bodyMissing ? "" : Buffer.from(request.body, 'base64');
     const requestLog = {
       Method: request.method,
       Headers: request.headers,
